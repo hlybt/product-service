@@ -1,7 +1,5 @@
 package com.shop.productservice.domain;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
 @Service
