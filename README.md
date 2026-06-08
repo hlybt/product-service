@@ -21,16 +21,14 @@ The Product Service is a Java-based microservice built with Spring Boot that han
 product-service/
 ├── src/
 │   ├── main/
-│   │   ├── java/com/shop/
-│   │   │   ├── controller/        # REST controllers
-│   │   │   ├── service/           # Business logic
-│   │   │   ├── repository/        # Data access layer
-│   │   │   ├── entity/            # Domain models
-│   │   │   └── dto/               # Data transfer objects
+│   │   ├── java/com/shop/productservice
+│   │   │   ├── domain/            # Domain model and business logic 
+│   │   │   ├── persistence/       # Data access
+│   │   │   ├── web/               # REST controllers
 │   │   └── resources/
-│   │       └── application.properties
+│   │       └── application.yml
 │   └── test/
-│       └── java/com/shop/
+│       └── java/com/shop/productservice
 ├── build.gradle                    # Gradle build configuration
 ├── settings.gradle                 # Gradle settings
 ├── gradlew                         # Gradle wrapper script
@@ -94,50 +92,10 @@ java -jar build/libs/product-service-0.0.1-SNAPSHOT.jar
 
 ## Configuration
 
-The service can be configured through `application.properties`. Common configurations include:
+The service can be configured through `application.yml`. Common configurations include:
 
 - Server port
 - Database connections (if applicable)
 - Application-specific settings
 
-## Development
 
-### Adding Dependencies
-
-Edit `build.gradle` to add new dependencies. The project uses Maven Central repository.
-
-### Code Structure Best Practices
-
-- **Controllers** - Handle HTTP requests and route to services
-- **Services** - Contain business logic
-- **Repositories** - Manage data persistence
-- **Entities** - Define domain models
-- **DTOs** - Handle request/response data transfer
-
-## Contributing
-
-1. Create a feature branch from `main`
-2. Make your changes
-3. Add tests for new functionality
-4. Ensure all tests pass with `./gradlew test`
-5. Submit a pull request
-
-## Version
-
-Current version: **0.0.1-SNAPSHOT**  
-Group: **com.shop**
-
-## License
-
-No license specified. Please add license information to the repository.
-
-## Additional Notes
-
-- The project is configured to use Java 25 language features
-- All tests use JUnit 5 platform
-- The service uses Spring Boot's auto-configuration features
-- The project is currently under active development
-
----
-
-For more information about Spring Boot, visit [Spring Boot Documentation](https://spring.io/projects/spring-boot)
