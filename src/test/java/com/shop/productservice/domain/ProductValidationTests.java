@@ -1,4 +1,4 @@
-package com.shop.productservice;
+package com.shop.productservice.domain;
 
 import java.math.BigDecimal;
 import java.util.Set;
