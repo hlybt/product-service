@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +32,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("{id}")
-	public Product getById(@PathVariable String id) {
+	public Product getById(@PathVariable("id") String id) {
 		return productService.getProduct(id);
 	}
 	 
@@ -41,14 +42,14 @@ public class ProductController {
 		return productService.saveProduct(product);
 	}
 	
-	@PutMapping({"id"})
-	public Product put(@PathVariable String id, @Valid @RequestBody Product product) {
+	@PutMapping("{id}")
+	public Product put(@PathVariable("id") String id, @Valid @RequestBody Product product) {
 		return productService.updateProduct(id, product);
 	}
 	
-	@DeleteMapping({"id"})
+	@DeleteMapping("{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable String id) {
+	public void delete(@PathVariable("id") String id) {
 		productService.deleteProduct(id);
 	}
 }

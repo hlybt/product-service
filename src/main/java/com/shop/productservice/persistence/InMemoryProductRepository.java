@@ -40,5 +40,10 @@ public class InMemoryProductRepository implements ProductRepository {
 	public void deleteById(String id) {
 		products.remove(id);
 	}
+
+	@Override
+	public void deleteAll() {
+		products.clear();
+	}
 	
 }

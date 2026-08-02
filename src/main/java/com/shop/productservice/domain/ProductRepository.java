@@ -8,4 +8,5 @@ public interface ProductRepository {
 	boolean existsById(String id);
 	Product save(Product product);
 	void deleteById(String id);
+	void deleteAll();
 }
