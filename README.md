@@ -6,7 +6,7 @@ A Spring Boot microservice for managing product data and operations. This servic
 
 ## Overview
 
-The Product Service is a Java-based microservice built with Spring Boot that handles all product-related operations. It's part of a larger microservices architecture and provides core functionality[...]
+The Product Service is a Java-based microservice built with Spring Boot that handles all product-related operations. It's part of a larger microservices architecture and provides core functionality for managing product information, inventory, and related operations.
 
 ## Technology Stack
 
