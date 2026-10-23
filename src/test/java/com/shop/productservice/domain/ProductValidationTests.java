@@ -33,7 +33,7 @@ class ProductValidationTests {
 
     @Test
     void whenProductIsValid_thenNoConstraintViolations() {
-        Product product = new Product("p-1", "Product name", new BigDecimal("19.99"));
+        Product product = Product.of("Product name", new BigDecimal("19.99"));
 
         Set<ConstraintViolation<Product>> violations = validator.validate(product);
 
@@ -41,19 +41,8 @@ class ProductValidationTests {
     }
 
     @Test
-    void whenIdBlank_thenViolationOnId() {
-        Product product = new Product("", "Name", new BigDecimal("1.00"));
-
-        Set<ConstraintViolation<Product>> violations = validator.validate(product);
-
-        assertFalse(violations.isEmpty());
-        assertTrue(violations.stream().anyMatch(v -> "id".equals(v.getPropertyPath().toString())),
-                "Expected a constraint violation for property 'id'");
-    }
-
-    @Test
     void whenNameBlank_thenViolationOnName() {
-        Product product = new Product("p-2", "", new BigDecimal("1.00"));
+        Product product = Product.of("", new BigDecimal("1.00"));
 
         Set<ConstraintViolation<Product>> violations = validator.validate(product);
 
@@ -64,7 +53,7 @@ class ProductValidationTests {
 
     @Test
     void whenPriceNull_thenViolationOnPrice() {
-        Product product = new Product("p-3", "Name", null);
+        Product product = Product.of("Name", null);
 
         Set<ConstraintViolation<Product>> violations = validator.validate(product);
 
@@ -75,8 +64,8 @@ class ProductValidationTests {
 
     @Test
     void whenPriceNotPositive_thenViolationOnPrice() {
-        Product productZero = new Product("p-4", "Name", new BigDecimal("0"));
-        Product productNegative = new Product("p-5", "Name", new BigDecimal("-5"));
+        Product productZero = Product.of("Name", new BigDecimal("0"));
+        Product productNegative = Product.of("Name", new BigDecimal("-5"));
 
         Set<ConstraintViolation<Product>> vZero = validator.validate(productZero);
         Set<ConstraintViolation<Product>> vNeg = validator.validate(productNegative);

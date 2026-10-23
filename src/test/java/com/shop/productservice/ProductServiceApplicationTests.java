@@ -17,103 +17,73 @@ import com.shop.productservice.domain.ProductRepository;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 class ProductServiceApplicationTests {
-     
+
 	@Autowired
 	private WebTestClient webTestClient;
-	
+
 	@Autowired
 	ProductRepository productRepository;
-	
+
 	@BeforeEach
 	void setUp() {
 		productRepository.deleteAll();
 	}
-	
+
 	@Test
 	void whenGetWithIdThenProductReturned() {
-		var id = "p-1";
-		var productToCreate = new Product(id, "Product name", new BigDecimal("19.99"));
-		Product expectedProduct = webTestClient.post()
-				.uri("/products")
-				.bodyValue(productToCreate)
-				.exchange()
-				.expectStatus().isCreated()
-				.expectBody(Product.class).value(product -> assertThat(product).isNotNull())
-                .returnResult().getResponseBody();
-		
-		webTestClient.get()
-				.uri("/products/" + id)
-				.exchange()
-				.expectStatus().is2xxSuccessful()
-				.expectBody(Product.class).value(actualProduct -> {
-                    assertThat(actualProduct).isNotNull();
-                    assertThat(actualProduct.id()).isEqualTo(expectedProduct.id());
-                });
-	}
-	
-	@Test
-	void whenPostThenProductCreated() {
-		var expectedProduct = new Product("p-1", "Product name", new BigDecimal("19.99"));
-		
-		webTestClient.post()
-				.uri("/products")
-				.bodyValue(expectedProduct)
-				.exchange()
-				.expectStatus().isCreated()
+		var productToCreate = Product.of("Product name", new BigDecimal("19.99"));
+		Product expectedProduct = webTestClient.post().uri("/products").bodyValue(productToCreate).exchange()
+				.expectStatus().isCreated().expectBody(Product.class).value(product -> assertThat(product).isNotNull())
+				.returnResult().getResponseBody();
+
+		webTestClient.get().uri("/products/" + expectedProduct.id()).exchange().expectStatus().is2xxSuccessful()
 				.expectBody(Product.class).value(actualProduct -> {
 					assertThat(actualProduct).isNotNull();
 					assertThat(actualProduct.id()).isEqualTo(expectedProduct.id());
+					assertThat(actualProduct.name()).contains(expectedProduct.name());
 				});
 	}
-	
+
+	@Test
+	void whenPostThenProductCreated() {
+		var expectedProduct = Product.of("Product name", new BigDecimal("19.99"));
+
+		webTestClient.post().uri("/products").bodyValue(expectedProduct).exchange().expectStatus().isCreated()
+				.expectBody(Product.class).value(actualProduct -> {
+					assertThat(actualProduct).isNotNull();
+					assertThat(actualProduct.id()).isNotNull();
+					assertThat(actualProduct.name()).contains(expectedProduct.name());
+				});
+	}
+
 	@Test
 	void whenPutWithNewPriceThenProductUpdated() {
-		var id = "p-1"; 
-		var productToCreate = new Product(id, "Product name", new BigDecimal("19.99"));
-		Product createdProduct = webTestClient.post()
-				.uri("/products")
-				.bodyValue(productToCreate)
-				.exchange()
-				.expectStatus().isCreated()
-				.expectBody(Product.class).value(product -> assertThat(product).isNotNull())
+		var productToCreate = Product.of("Product name", new BigDecimal("19.99"));
+		Product createdProduct = webTestClient.post().uri("/products").bodyValue(productToCreate).exchange()
+				.expectStatus().isCreated().expectBody(Product.class).value(product -> assertThat(product).isNotNull())
 				.returnResult().getResponseBody();
-		
-		var productWNewPrice = new Product(createdProduct.id(), createdProduct.name(), new BigDecimal("20.00"));
-		
-		webTestClient.put()
-				.uri("/products/" + id)
-				.bodyValue(productWNewPrice)
-				.exchange()
-				.expectStatus().isOk()
+		var id = createdProduct.id();
+
+		var productWNewPrice = new Product(id, createdProduct.name(), new BigDecimal("20.00"),
+				createdProduct.createdDate(), createdProduct.lastModifiedDate(), createdProduct.version());
+		webTestClient.put().uri("/products/" + id).bodyValue(productWNewPrice).exchange().expectStatus().isOk()
 				.expectBody(Product.class).value(actualProduct -> {
 					assertThat(actualProduct).isNotNull();
 					assertThat(actualProduct.price()).isEqualTo(productWNewPrice.price());
 				});
 	}
-	
+
 	@Test
 	void whenDeleteThenProductDeleted() {
-		var id = "p-1"; 
-		var productToCreate = new Product(id, "Product name", new BigDecimal("19.99"));
-		webTestClient.post()
-				.uri("/products")
-				.bodyValue(productToCreate)
-				.exchange()
-				.expectStatus().isCreated()
-				.expectBody(Product.class).value(product -> assertThat(product).isNotNull())
-				.returnResult().getResponseBody();
-		
-		webTestClient.delete()
-			.uri("/products/" + id)
-			.exchange()
-			.expectStatus().isNoContent();
-		
-		webTestClient.get()
-				.uri("/products/" + id) 
-				.exchange()
-				.expectStatus().isNotFound()
-				.expectBody(String.class).value(errorMessage -> 
-						assertThat(errorMessage)
-							.isEqualTo("The product with id " + id + " was not found."));
+		var productToCreate = Product.of("Product name", new BigDecimal("19.99"));
+		var productToDelete = webTestClient.post().uri("/products").bodyValue(productToCreate).exchange().expectStatus()
+				.isCreated().expectBody(Product.class).value(product -> assertThat(product).isNotNull()).returnResult()
+				.getResponseBody();
+
+		webTestClient.delete().uri("/products/" + productToDelete.id()).exchange().expectStatus().isNoContent();
+
+		webTestClient.get().uri("/products/" + productToDelete.id()).exchange().expectStatus().isNotFound()
+				.expectBody(String.class).value(errorMessage -> assertThat(errorMessage)
+						.isEqualTo("The product with id " + productToDelete.id() + " was not found."));
 	}
 }

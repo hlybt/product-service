@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.shop.productservice.domain.ProductAlreadyExistsException;
 import com.shop.productservice.domain.ProductNotFoundException;
 
 @RestControllerAdvice
@@ -18,12 +17,6 @@ public class ProductControllerAdvice {
 	@ExceptionHandler(ProductNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	String productNotFoundHandler(ProductNotFoundException ex) {
-		return ex.getMessage();
-	}
-	
-	@ExceptionHandler(ProductAlreadyExistsException.class)
-	@ResponseStatus(HttpStatus.UNPROCESSABLE_CONTENT)
-	String productAlreadyExistsHandler(ProductAlreadyExistsException ex) {
 		return ex.getMessage();
 	}
 	

@@ -1,6 +1,7 @@
 package com.shop.productservice.demo;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
@@ -21,9 +22,9 @@ public class ProductDataLoader {
 	
 	@EventListener(ApplicationReadyEvent.class)
 	public void loadProductTestData() {
-		var p1 = new Product("p-1", "Product name", new BigDecimal("19.99"));
-		var p2 = new Product("p-2", "Product name", new BigDecimal("19.99"));
-		productRepository.save(p1);
-		productRepository.save(p2);
+		productRepository.deleteAll();
+		var p1 = Product.of("Product name", new BigDecimal("19.99"));
+		var p2 = Product.of("Product name", new BigDecimal("19.99"));
+		productRepository.saveAll(List.of(p1, p2));
 	}
 }
