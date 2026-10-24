@@ -12,6 +12,9 @@ The Product Service is a Java-based microservice built with Spring Boot that han
 
 - **Java:** Java 25
 - **Framework:** Spring Boot 4.0.5
+- **Data access:** Spring Data JDBC
+- **Database:** PostgreSQL
+- **Configuration:** Spring Cloud Config Client
 - **Build Tool:** Gradle
 - **Testing:** JUnit 5 with Spring Boot Test
 - **Validation:** Spring Validation
@@ -24,24 +27,27 @@ product-service/
 ├── src/
 │   ├── main/
 │   │   ├── java/com/shop/productservice
-│   │   │   ├── domain/            # Domain model and business logic 
-│   │   │   ├── persistence/       # Data access
+│   │   │   ├── config/            # Configuration properties
+│   │   │   ├── demo/              # Test data loader
+│   │   │   ├── domain/            # Domain model, business logic, persistence 
 │   │   │   └── web/               # REST controllers
 │   │   └── resources/
-│   │       └── application.yml
+│   │       ├── application.yml       # Application and Spring Cloud config settings
+│   │       └── schema.sql            # PostgreSQL schema initialization
 │   └── test/
 │       └── java/com/shop/productservice    # End-to-end HTTP tests
 │           └── domain/                     # Unit tests 
 ├── build.gradle                    # Gradle build configuration
 ├── settings.gradle                 # Gradle settings
-├── gradlew                         # Gradle wrapper script
-└── README.md
+└── gradlew                         # Gradle wrapper script
 ```
 
 ## Prerequisites
 
 - Java 25 or higher
 - Gradle (or use the included Gradle wrapper)
+- PostgreSQL running locally on `localhost:5432`
+- Optional: Spring Cloud Config Server available at `http://localhost:8888`
 
 ## Getting Started
 
@@ -79,6 +85,9 @@ java -jar build/libs/product-service-0.0.1-SNAPSHOT.jar
 - **RESTful API Endpoints** - CRUD operations for product management
 - **Input Validation** - Request validation using Spring Validation 
 - **Error Handling** - Centralized error handling for validation and service errors
+- **Persistence** - PostgreSQL with Spring Data JDBC and optimistic locking support
+- **Externalized configuration** - Spring Cloud Config
+- **Auditing** - Basic audit metadata
 - **Testing** - Unit and integration tests included (JUnit 5 + Spring Boot Test)
 
 ## Recent changes (since initial README)
@@ -89,7 +98,11 @@ java -jar build/libs/product-service-0.0.1-SNAPSHOT.jar
 - Added application.yml with application configuration; Tomcat-specific configuration has been included.
 - Added unit tests for validation and service behavior; some tests were reorganized into com.shop.productservice.domain.
 - Added integration tests to validate end-to-end behavior.
-- Minor style cleanup: removed unused imports and code formatting tweaks.
+- Added a GitHub Actions workflow for build and test automation.
+- Added Spring Cloud Config client support and configuration properties binding.
+- Introduced PostgreSQL persistence with Spring Data JDBC.
+- Switched the product model and repository to database-backed IDs and auditing metadata.
+- Added schema initialization and updated the application configuration for JDBC and external config.
 
 ## Continuous Integration
 
@@ -97,10 +110,6 @@ This repository includes a GitHub Actions workflow (.github/workflows/commit-sta
 
 Badge:
 [![CI](https://github.com/hlybt/product-service/actions/workflows/commit-stage.yml/badge.svg)](https://github.com/hlybt/product-service/actions/workflows/commit-stage.yml)
-
-To run the tests locally:
-- macOS / Linux: ./gradlew build
-- Windows: gradlew.bat build
 
 Notes:
 - If you want the workflow to run automatically on push or pull requests, modify the workflow triggers to include `push` and/or `pull_request`.
@@ -117,6 +126,11 @@ Notes:
 
 - `spring-boot-starter-webmvc` - Web framework for REST endpoints
 - `spring-boot-starter-validation` - Input validation support
+- `spring-boot-starter-actuator` - Health and management endpoints
+- `springframework.boot:spring-boot-starter-data-jdbc` - Spring Data JDBC persistence layer
+- `org.postgresql:postgresql` - PostgreSQL JDBC driver
+- `springframework.cloud:spring-cloud-starter-config` - Spring Cloud Config client integration
+- `springframework.retry:spring-retry` - Retry support for external config and service calls
 - `spring-boot-starter-webmvc-test` - Testing Spring MVC components
 - `spring-boot-webtestclient` - End-to-end HTTP tests
 - `junit-platform-launcher` - JUnit 5 test execution
