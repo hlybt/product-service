@@ -31,7 +31,7 @@ public class ProductServiceTests {
 		
 		var actualProducts = productService.viewProducts();
 
-		assertThat(actualProducts).containsExactlyInAnyOrderElementsOf(actualProducts);
+		assertThat(actualProducts).containsExactlyInAnyOrderElementsOf(expectedProducts);
 	}
 	
 	@Test
