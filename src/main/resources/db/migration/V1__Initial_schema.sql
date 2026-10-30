@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS product;
 CREATE TABLE product (
     id                  BIGSERIAL PRIMARY KEY NOT NULL,
     name                varchar(255) NOT NULL,
